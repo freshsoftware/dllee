@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "DLLee": {
+      "commandName": "Project",
+      "commandLineArgs": "\"c:\\tools\" /recursive /scannow",
+      "sqlDebugging": false
+    }
+  }
+}
