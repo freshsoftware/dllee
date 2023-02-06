@@ -50,6 +50,7 @@ namespace DLLee
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.chkHideErroneous = new System.Windows.Forms.CheckBox();
+            this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.SuspendLayout();
             // 
             // btnAnalyzeFolder
@@ -60,7 +61,7 @@ namespace DLLee
             this.btnAnalyzeFolder.TabIndex = 0;
             this.btnAnalyzeFolder.Text = "Analyze";
             this.btnAnalyzeFolder.UseVisualStyleBackColor = true;
-            this.btnAnalyzeFolder.Click += new System.EventHandler(this.button1_Click);
+            this.btnAnalyzeFolder.Click += new System.EventHandler(this.btnAnalyzeFolder_Click);
             // 
             // textBox1
             // 
@@ -79,15 +80,15 @@ namespace DLLee
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(12, 9);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(98, 15);
+            this.label1.Size = new System.Drawing.Size(43, 15);
             this.label1.TabIndex = 2;
-            this.label1.Text = "Folder to Analyze";
+            this.label1.Text = "Folder:";
             // 
             // txtFolderPath
             // 
-            this.txtFolderPath.Location = new System.Drawing.Point(116, 6);
+            this.txtFolderPath.Location = new System.Drawing.Point(61, 6);
             this.txtFolderPath.Name = "txtFolderPath";
-            this.txtFolderPath.Size = new System.Drawing.Size(671, 23);
+            this.txtFolderPath.Size = new System.Drawing.Size(726, 23);
             this.txtFolderPath.TabIndex = 3;
             // 
             // chkRecursive
@@ -173,9 +174,9 @@ namespace DLLee
             // btnBrowseFolders
             // 
             this.btnBrowseFolders.Image = ((System.Drawing.Image)(resources.GetObject("btnBrowseFolders.Image")));
-            this.btnBrowseFolders.Location = new System.Drawing.Point(793, 5);
+            this.btnBrowseFolders.Location = new System.Drawing.Point(787, 5);
             this.btnBrowseFolders.Name = "btnBrowseFolders";
-            this.btnBrowseFolders.Size = new System.Drawing.Size(26, 23);
+            this.btnBrowseFolders.Size = new System.Drawing.Size(26, 25);
             this.btnBrowseFolders.TabIndex = 7;
             this.toolTip1.SetToolTip(this.btnBrowseFolders, "Pick folder...");
             this.btnBrowseFolders.UseVisualStyleBackColor = true;
@@ -238,6 +239,7 @@ namespace DLLee
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.ColumnHeader colCodeSigner;
         private System.Windows.Forms.CheckBox chkHideErroneous;
+        private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
     }
 }
 

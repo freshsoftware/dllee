@@ -13,10 +13,19 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+//DLLee: A free & open source .NET binary analyzer
+//Copyright Fresh Software LLC (www.freshsoftware.com)
+//Released under the MIT license
+
+
+
 namespace DLLee
 {
     public partial class Form1 : Form
     {
+
+        public string ExePath;
+
         public string[] args;
         public Form1()
         {
@@ -36,28 +45,24 @@ namespace DLLee
             Console.WriteLine(s);
         }
 
-
         private void Form1_Load(object sender, EventArgs e)
         {
-            string s =  Assembly.GetExecutingAssembly().Location;
-            s = Path.GetDirectoryName(s);
-            txtFolderPath.Text = s;
-
+            string strExeFile =  Assembly.GetExecutingAssembly().Location;
+            ExePath = Path.GetDirectoryName(strExeFile);
+            txtFolderPath.Text = ExePath;                                    //set default folder to current folder
             HandleCommandLineArgs();
-
-
         }
 
         private void HandleCommandLineArgs()
         {
-            if (this.args == null) return; //nothing passed in
+            if (this.args == null) return;                  //nothing passed in
 
-            bool scanNow = false;
+            bool scanNow = false;                           //if true, scan immediately
             for (int i =0; i < this.args.Count(); i++)
             {
                 string arg = this.args[i];
 
-                //check first argument for file/folder to scan
+                //check first argument for file/folder to scan.
                 if (i==0)
                 {
                     //folder passed in
@@ -75,24 +80,24 @@ namespace DLLee
                     if (Directory.Exists(arg))
                     {
                         txtFolderPath.Text = arg;
-                    }
-                    
+                    }                   
                 }
 
 
-
+                //Check recursive parameter
                 if (arg.Contains("/recursive"))
                 {
                     chkRecursive.Checked = true;
                 }
 
+                //Check scannow paramter
                 if (arg.Contains("/scannow"))
                 {
                     scanNow = true;
                 }
             }
 
-
+            //Perform the scan immediately, if requested
             if (scanNow)
             {
                 ScanNow();
@@ -152,18 +157,15 @@ namespace DLLee
             return result;
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void btnAnalyzeFolder_Click(object sender, EventArgs e)
         {
             ScanNow();
         }
 
         public void ScanNow()
         {
-            //textBox1.Text = GetDLLinfoAsText(Assembly.GetExecutingAssembly().Location);
-
             DLLinfoEngine dle = new DLLinfoEngine();
             List<DLLinformation> dlls = dle.GetDLLinfoForAFolder(txtFolderPath.Text, chkRecursive.Checked);
-
 
             listView1.Items.Clear();
             listView1.BeginUpdate();
@@ -174,17 +176,12 @@ namespace DLLee
                 if ((chkHideErroneous.Checked) && !String.IsNullOrEmpty(di.exception_info))
                 {
                     stat(di.filename + " was skipped due error: " + di.exception_info);
-                    //listView1.Items.Add(li); //we should return the filename at least, and any info we can. dont use reflection until the end, the bottom.
-                    //and log it to bottom textbox, not listview.
                     continue;
                 }
 
-
                 string filename = Path.GetFileName(di.filename);
                 string folder = Path.GetDirectoryName(di.filename);
-
-                //folder = Path.GetRelativePath(folder, txtFolderPath.Text);
-                folder = @"\" + Path.GetRelativePath(txtFolderPath.Text, folder);
+                folder = @"\" + Path.GetRelativePath(txtFolderPath.Text, folder) + "\\";   //this overwrites any definition above
 
                 li.Text = folder;
                 li.SubItems.Add(filename); //filename
@@ -197,31 +194,56 @@ namespace DLLee
                 li.SubItems.Add(di.CodeSigned.ToString());
                 li.SubItems.Add(di.CodeSignerName);
                 listView1.Items.Add(li);
-
             }
+
             listView1.EndUpdate();
+
+            AutoSizeColumns();
         }
 
         private void btnBrowseFolders_Click(object sender, EventArgs e)
         {
-            PickFolder();
+            PickFolder2();
+            ScanNow();
         }
 
         private void PickFolder()
         {
-            //throw new NotImplementedException();
             openFileDialog1.Title = "Pick folder or .EXE hosting the app";
-            
+            openFileDialog1.FileName = "";
 
-            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            ; if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 //process
+                txtFolderPath.Text = Path.GetDirectoryName(openFileDialog1.FileName);
             }
+        }
+
+        private void PickFolder2()
+        {
+            folderBrowserDialog1.SelectedPath = ExePath;
+            if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
+            {
+                //process
+                txtFolderPath.Text = Path.GetDirectoryName(folderBrowserDialog1.SelectedPath);
+            }
+            
         }
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
 
         }
+
+        private void AutoSizeColumns()
+        {
+            listView1.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+        }
+
+
+        #region "Dark Mode"
+            //todo...
+        #endregion
+
     }
 }
